@@ -32,3 +32,7 @@ Our User Story is that the company sends Gift Baskets to each Customer around th
 Because there are many Customers already present in the system, they also need a way to update all the old records to the new Default Gift Basket.
 
 Lastly, they have another company in the system, a child company, that does not need the "default" functionality.  While they don't mind the fields being present, they do not want any defaults to populate.
+
+## Enjoy What We're Making?
+
+Come sign up at [Patron](https://www.patreon.com/sparebrained) to get full access to many tools and more samples, along with other great benefits.
