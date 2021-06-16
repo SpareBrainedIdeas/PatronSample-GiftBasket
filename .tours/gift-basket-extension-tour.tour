@@ -1,0 +1,367 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Gift Basket Extension Tour",
+  "steps": [
+    {
+      "title": "Introduction",
+      "description": "In this tour, we are creating a lightweight extension.  This walkthrough will demonstrate some basic goals such as:\r\n\r\n- Creating a main Setup table for a new functionality, including a Page with Actions\r\n- Creating a new table for storing a new type of information, along with a list and card to match\r\n- How to add fields via tableextension and pageextension objects\r\n- Using a Codeunit to watch for new records and add data using Events\r\n- Using a Codeunit to update existing records\r\n\r\n## Background / Story\r\n\r\nOur User Story is that the company send Gift Baskets to each Customer around the holiday season.  They want to keep track of which Gift Baskets to send to which Customer.  This should default for all new Customers.  However, since each Salesperson makes their own Customers, they may want to set their Customers to receive a different Gift Basket as their personal alternate-default.\r\n\r\nBecause there are many Customers already present in the system, they also need a way to update all the old records to the new Default Gift Basket.\r\n\r\nLastly, they have another company in the system, a child company, that does not need the \"default\" functionality.  While they don't mind the fields being present, they do not want any defaults to populate."
+    },
+    {
+      "file": "src/table/GiftBasketCGB.Table.al",
+      "description": "## The Gift Basket Table\r\n\r\nOur first object is the Gift Basket Table.  You'll notice that we will use the *object suffix* technique - so all names of new Objects, as well as new Fields that are added to existing Objects, will end in CGB.  This is part of being a good SaaS citizen - you get your prefix/suffix from Microsoft assigned as a partner.",
+      "line": 1
+    },
+    {
+      "file": "src/table/GiftBasketCGB.Table.al",
+      "description": "Here we note the Caption of the table, which is what will display in messages and windows when needed.  We can drop the Prefix/Suffix for captions.\r\n\r\nCaptions also are how the Translation engine connects to local translations.",
+      "line": 3
+    },
+    {
+      "file": "src/table/GiftBasketCGB.Table.al",
+      "description": "DataClassification is to provide hinting about possible privacy regulation tags needed, such as GDPR.",
+      "line": 4
+    },
+    {
+      "file": "src/table/GiftBasketCGB.Table.al",
+      "description": "DrillDownPageId allows us to set on this Table, \"Whenever BC does a dropdown or lookup for this record, which Page should it use?\".",
+      "line": 5
+    },
+    {
+      "file": "src/table/GiftBasketCGB.Table.al",
+      "description": "Our primary key field (we'll take more about that shortly) is a Code[20] field, meaning an Uppercase alphanumeric value up to 20 characters long.  That means that `GB0001` is valid, as is `HAPPYTIMEFRUIT`.\r\n\r\nWe are not including auto-numbering as part of this demonstration, as it's not needed according to our users.\r\n\r\n### Breakdown of parts\r\n\r\nWe declare the `field` with 3 parameters:\r\n- Field Number\r\n- Field Name\r\n- Data type\r\n\r\nThe number in new, custom objects can be any large positive value, but must be unique.  For tableextensions, the field numbers should align with your extension, but we'll talk more to that soon.\r\n\r\nThe name can be no longer than 30 characters at this time.  This is the name you'll use in coding and is not displayed to the user if you set a caption.\r\n\r\nData types is a longer explanation, but you can read about them [here](https://docs.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/methods-auto/library).",
+      "line": 9
+    },
+    {
+      "file": "src/table/GiftBasketCGB.Table.al",
+      "description": "Much like the table's Caption property, the caption on the Field controls what is show to the user when this field is presented.   This means you set the Caption on the Field once, and can use it on 1 page or 100 pages, all while presenting the right caption.  Powerful stuff!",
+      "line": 11
+    },
+    {
+      "file": "src/table/GiftBasketCGB.Table.al",
+      "description": "As is common in Business Central with setup/supplementary tables, with a Code, we also provide a longer Description for the users to be able to set their own more helpful text about the record.\r\n\r\n*Note that Code and Text has a maximum size of 250 and going over that requires very complex solutions from both a data and UI perspective.*",
+      "line": 14
+    },
+    {
+      "file": "src/table/GiftBasketCGB.Table.al",
+      "description": "Note that we use a `Code` type, rather than Text type, for the Primary Key.  This ensures that if the user tries to enter `Shoes` when `SHOES` already exists, this would be considered invalid.  Code's forced uppercase makes things much clearer.",
+      "line": 22
+    },
+    {
+      "file": "src/table/GiftBasketCGB.Table.al",
+      "description": "The `keys` section controls what sorting methods are available for performance, and are mostly beyond the scope of this tour -- but, you should always have at least one key, the `Primary Key` - if you're unfamiliar with the concept, check out [this guide](https://database.guide/what-is-a-primary-key/). ",
+      "line": 20
+    },
+    {
+      "title": "Table Summary",
+      "description": "With the Gift Basket table created, we need to make somewhere the user can see and manage the values.  For this, typically an Extension has a List and Card - a List to show the main information, then a Card where more detailed information can be reviewed.\r\n\r\nIn our case, we could skip the Card, as two fields is a small list to manage, but for good practice, we will do both."
+    },
+    {
+      "file": "src/page/GiftBasketCGB.Page.al",
+      "description": "When we create a page, aside from the Object Number, Name, and Caption, we then immediately must think about the `PageType`.  The most common are:\r\n\r\n- List\r\n- Card\r\n- Document\r\n- Worksheet\r\n- ListPart\r\n- CardPart\r\n\r\nYou can read more about the Page Types and Layouts [here](https://docs.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/devenv-page-types-and-layouts).\r\n\r\nIn this case, we want a `Card`.",
+      "line": 5
+    },
+    {
+      "file": "src/page/GiftBasketCGB.Page.al",
+      "description": "All pages need to know where to get their data from, which is done via the `SourceTable` property.",
+      "line": 6
+    },
+    {
+      "file": "src/page/GiftBasketCGB.Page.al",
+      "description": "The `layout` section is controls how the content of the page should be rendered on the various clients, including Web and Universal (mobile).",
+      "line": 8
+    },
+    {
+      "file": "src/page/GiftBasketCGB.Page.al",
+      "description": "The `content` area is one of the common parts of a Page Layout, the other major one being `factboxes`.\r\n\r\nYou can find out more on the [Pages Overview](https://docs.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/devenv-pages-overview#page-layout) Docs page.",
+      "line": 10
+    },
+    {
+      "file": "src/page/GiftBasketCGB.Page.al",
+      "description": "Fields work best in groups!  In Card layouts, groups automatically become FastTabs.  We're naming our main group as `General` because it was recently promoted from Colonel.  *drumroll*\r\n\r\nBut seriously, it's common practice to have a 'General' section for many cards.",
+      "line": 12
+    },
+    {
+      "file": "src/page/GiftBasketCGB.Page.al",
+      "description": "While the Caption is identical to the group's Name, names of things don't get added to the Translation engine, so it's a good idea to add Captions early on.",
+      "line": 14
+    },
+    {
+      "file": "src/page/GiftBasketCGB.Page.al",
+      "description": "Here we add each of our fields.  Note that we have a slightly different syntax when we *use* a field on a page:  `field([Local Page name]; [Source of Field Data])`\r\n\r\nHere, we are just displaying the Code from the `Rec`'s Code value.  Rec on a page is always the SourceTable.\r\n\r\nAdditionally, for good practice, we need to supply `ToolTip` information for the user and an `ApplicationArea`.  ApplicationAreas are beyond the scope of this tour, but they're currently required, and setting it to `All` makes sure the control is available to all users of this page.",
+      "line": 20
+    },
+    {
+      "file": "src/page/GiftBasketsCGB.Page.al",
+      "description": "For pages to be found via the \"Tell Me\" functionality, we need to supply both a `UsageCategory` and an `ApplicationArea`.  UsageCategory will control where in the Tell Me results the page (object) should be located. ",
+      "line": 4
+    },
+    {
+      "file": "src/page/GiftBasketsCGB.Page.al",
+      "description": "Much like the Card, our List type page needs a Caption and a SourceTable.",
+      "line": 7
+    },
+    {
+      "file": "src/page/GiftBasketsCGB.Page.al",
+      "description": "By adding a CardPageId to a List, we tell BC that it can open a Card from each record.  Super handy!",
+      "line": 8
+    },
+    {
+      "file": "src/page/GiftBasketsCGB.Page.al",
+      "description": "Unlike our Card, we don't have a Group (FastTab) for the content, we want a grid of columns and rows (... a list!), and this is done via the `repeater` option.\r\n\r\nGenerally, repeaters don't have a displayed Caption like FastTabs do, so we can skip that for this.",
+      "line": 14
+    },
+    {
+      "file": "src/page/GiftBasketsCGB.Page.al",
+      "description": "One last List note:  Often, Lists are also set to `Editable = false;`.  In our case, we don't mind if the users work on the Gift Basket data in list form, so we have skipped that.  This may cause odd behavior for the `CardPageId` field, mind.",
+      "line": 9
+    },
+    {
+      "title": "Pages Done!",
+      "description": "Now that we have the Gift Basket Pages done, we now need to address the parts about Defaulting:\r\n\r\n- Company Wide Default\r\n- Per user overrides from User Setup\r\n\r\nFor the first, we'll need a new Setup table for our Gift Baskets.  We'll then use a TableExtension to address the second via adding a field to the User Setup table.\r\n\r\n### Setup Pattern\r\n\r\nFor the Company Wide Default, we'll implement the \"Setup\" table design pattern, which means \"[Module Name] Setup\" Table & Page.  The \"Setup\" table will have a single record, with an empty Primary key.  This allows devs to call Setup.Get() and get the record.\r\n\r\nLet's dive in!\r\n"
+    },
+    {
+      "file": "src/table/GiftBasketSetupCGB.Table.al",
+      "description": "For a Setup table, typically it's just a Code field, and it's still length 10 by default, which is just because that used to be the Development Environment default setting.\r\n\r\nNote that we're calling the Primary Key field `Primary Key`, but that's just for us - the user should never see this field.",
+      "line": 9
+    },
+    {
+      "file": "src/table/GiftBasketSetupCGB.Table.al",
+      "description": "Per our User Story, some companies don't *want* the \"Default\" functionality enabled, so we'll create a Boolean to control this behavior here.  Since the `Gift Basket Setup` table is per-company (the default behavior of tables), this means each company can choose.",
+      "line": 18
+    },
+    {
+      "file": "src/table/GiftBasketSetupCGB.Table.al",
+      "description": "Here's where we'll add the `Company Default Gift Basket` code field, which will be connected to the Gift Basket table, so we'll make sure this is the same date type and length as the primary key of the `Gift Basket` table.",
+      "line": 20
+    },
+    {
+      "file": "src/table/GiftBasketSetupCGB.Table.al",
+      "description": "This is how we tell the table to connect this field to the `Gift Basket` table.  By creating this TableRelation property, we get many things all at once:\r\n\r\n- if the Gift Basket Code that is stored in this field is deleted or renamed, Business Central will update this field automatically for us!\r\n- We'll get an automatic dropdown to connect to the Gift Basket table so the user can choose  (The DrillDownPageId from the Gift Basket table will be used if the user opens the full \"Advanced View\" selection)\r\n- Users won't be allowed to enter invalid information",
+      "line": 24
+    },
+    {
+      "file": "src/table/GiftBasketSetupCGB.Table.al",
+      "description": "This `GetRecordOnce` procedure (sometimes called Method or Function in conversations) is a design pattern so that when we need the Setup record, we'll call `GiftBasket.GetRecordOnce()` instead of `GiftBasket.Get()`.  This makes sure that we'll only ask the database for the record one time, whether we need the setup 1 time or 1,000,000 times.",
+      "line": 45
+    },
+    {
+      "file": "src/table/GiftBasketSetupCGB.Table.al",
+      "description": "The Setup Design Pattern means that we should only have 1 record.  When the user opens the `Gift Basket Setup` page, they're expecting they can just enter info, not have to create a record first.\r\n\r\nSo, on the Gift Basket Page, we'll call this `InsertIfNotExists()` function which will make sure that if a record doesn't exist (`if not Rec.Get() then`) to insert an empty record.\r\n\r\nSpeaking of the Gift Basket Setup Page...",
+      "line": 55
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "For our Gift Basket Setup page, this is an Administration category page.   And because we only want the single record in the table, we'll prevent the user from Inserting (`InsertAllowed`) or Deleting (`DeleteAllowed`) that single record.  This removes some of the controls on the page automatically for us, making for a clean user experience.",
+      "line": 9
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "This Card page works pretty much the same way as our Gift Basket Card.  It's a very good idea to make sure the ToolTips are clear for the users on Setup pages.  Much like Captions, ToolTips will be run through the Translation engine too.",
+      "line": 23
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "Here on the Gift Basket Setup page, we'll display some actions in the Action bar.  This is done via the `actions` area after `layout`.",
+      "line": 34
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "Much like fields, actions have a name that we use as a developer, in our case, called `UpdateToDefault`.",
+      "line": 37,
+      "selection": {
+        "start": {
+          "line": 34,
+          "character": 6
+        },
+        "end": {
+          "line": 35,
+          "character": 8
+        }
+      }
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "Of course, we caption them for users.",
+      "line": 39
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "ToolTips are also valuable on actions.",
+      "line": 40
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "Images are provided by Microsoft and you have to choose from their list of options.  You can use Intellisense (Ctrl+.) to select from a list, but VSC Extensions (like AZ AL Toolbox) can add helpers that may let you browse them.",
+      "line": 42
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "By setting actions to `Promoted`, they'll be more accesible on page open.  There's finite space for Promoted actions, so build wisely.",
+      "line": 44
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "When this Page is opened by a user, the `trigger OnOpenPage()` is run automatically once.  This is where we hook into that `InsertIfNotExists` function from the Gift Basket Setup table.\r\n\r\nYou'll note we can use functions from the Source Table by calling them on `Rec`.",
+      "line": 60
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "With Actions, you can either use the `RunObject` property to directly run an Object (including Pages, Reports, Codeunits).\r\n\r\nIf you need to do something more than just Run an object, you'll need to use the `trigger OnAction()`, which is shown here as an example.\r\n\r\nWe'll cover what this Action actually does shortly in the Codeunit review.",
+      "line": 51
+    },
+    {
+      "file": "src/page/GiftBasketSetupCGB.Page.al",
+      "description": "You'll also notice that there's a mix of curly braces (`{}`) to start and end sections and the `begin \\ end`.\r\n\r\nAt the time of writing, AL mixes these.  Typically, braces are for layouts and object structure.  Begin\\end are generally used when code is involved.",
+      "line": 52
+    },
+    {
+      "file": "src/tableextension/UserSetupCGB.TableExt.al",
+      "description": "With tableextensions, we have to tell BC which table we're extending.  Since we need to default Gift Basket Codes on with a Per-User override, the User Setup is a good home for that type of information.",
+      "line": 1
+    },
+    {
+      "file": "src/tableextension/UserSetupCGB.TableExt.al",
+      "description": "Here we add a new field that same way we created a field on our own table.\r\n\r\nTwo things to note:\r\n- It's a good idea to tie field numbers to your extension range.  This is because field numbers must be unique on the table, even after all the extensions are added.\r\n- We add our Extension/Developer Prefix/Suffix to field names.  This can be vital, as Cloud/SaaS customers cannot delete fields easily, so if Microsoft adds a new field that is the same as your custom field, you'll have an inescapable conflict and a *big* problem.",
+      "line": 5
+    },
+    {
+      "file": "src/pageextension/UserSetupCGB.PageExt.al",
+      "description": "After we add field to a table via tableextension, we'll need to do the same to any related pages we need with a pageextension.",
+      "line": 1
+    },
+    {
+      "file": "src/pageextension/UserSetupCGB.PageExt.al",
+      "description": "User Setup is a list, and `Control1` is the Repeater control for it.  We'll add our new field to the right end of the list via the `addlast` keyword for the `layout`.",
+      "line": 5
+    },
+    {
+      "file": "src/tableextension/CustomerCGB.TableExt.al",
+      "description": "We can now finally add the Gift Basket connection to the Customer table.",
+      "line": 1
+    },
+    {
+      "file": "src/tableextension/CustomerCGB.TableExt.al",
+      "description": "Just like the User Setup extension, we add a field to this table, the Customer table.",
+      "line": 6
+    },
+    {
+      "file": "src/tableextension/CustomerCGB.TableExt.al",
+      "description": "We still add the TableRelation here, just like on the Gift Basket Setup table, so the user can pick alternate options for specific cases.\r\n\r\nInteresting to note:  We're doing the TableRelation from a field to a Table.  This is because the Table we're pointing to has only one primary key field, so it can assume you mean that field.\r\n\r\nSo, writing `TableRelation = \"Gift Basket CGB\";` is the same as writing the `TableRelation = \"Gift Basket CGB\".Code;`.",
+      "line": 9
+    },
+    {
+      "file": "src/pageextension/CustomerListCGB.PageExt.al",
+      "description": "Just like the User Setup, we now Extend the Customer List via this Page Extension, simply adding the field last to the repeater.",
+      "line": 5
+    },
+    {
+      "file": "src/pageextension/CustomerListCGB.PageExt.al",
+      "description": "ToolTips are still a good idea.",
+      "line": 9,
+      "selection": {
+        "start": {
+          "line": 9,
+          "character": 17
+        },
+        "end": {
+          "line": 9,
+          "character": 91
+        }
+      }
+    },
+    {
+      "file": "src/pageextension/CustomerCardCGB.PageExt.al",
+      "description": "On the pageextension for the Customer Card, we're going to add the Gift Basket Code as the last field in the `General` FastTab.",
+      "line": 5
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "Now, you may be wondering - we have done nothing so far about actually *setting* the Gift Basket Code - only where the value should live and showing it to the user.\r\n\r\nHere in this Codeunit (an object designed to just hold code), we're going to fix that using Events.",
+      "line": 2
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "This decorator line has several key parts:\r\n\r\n- `EventSubscriber` tells Business Central that this procedure we're about to define should listen for when a specific event happens, then run\r\n- `ObjectType::Table` tells BC that we're going to listen for an Event from a Table type object\r\n- `Database::Customer` is a two-step piece of info - Business Central sees `Database::` and knows that it should look up the Table Number of the next part based on the name, the `Customer` table in this case.\r\n- `'OnAfterInsertEvent'` is a string that is the name of the Event.  These are named to give you an idea of when they happen.  In this case, the event fires *after* a Customer record is inserted.\r\n- `''` - some events have a specific 2nd trigger we may need to clarify to differentiate, but here we do not.\r\n- `true, true` are settings to say if this function should be skipped if the Customer is missing the License or missing the permission (respectively). If either are false and are the related license/permissino is missing, then an error will be thrown at the user, which *can* be desired.",
+      "line": 3
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "For our event procedure, we are passed a Customer and a boolean on whether or not the 'trigger' should be run.\r\n\r\nEach event has their own set of possible parameters, so you'll need to learn a lot about which events you'll need and how to find info.  One method is: inside the `()`, if you press Ctrl+[space] to activate intellisense, it'll present options for this event.\r\n\r\nFor Insert/Modify/Rename/Delete operations on Records, developers can choose if triggers should run (like `Rec.Insert(true)`). It's a very good idea to respect this parameter.",
+      "line": 4
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "Here we will reference two Tables in the code, so we define those in our `var` section.",
+      "line": 7
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "Here is how we respect the RunTrigger.  If that's been set to false, then we can skip running the rest of the procedure via the `exit;` keyword.",
+      "line": 10
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "Here's a use of that Setup `GetRecordOnce()` pattern - this calls `.Get()` on the table, which for our setup table, means the same as `.Get('')` - find the record with an empty Primary Key.",
+      "line": 12
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "Here is how we *implement* the request \"Don't default when in the child company\".  If the Setup has the `Enable Gift Default` turned off, we can stop right away (`exit;`).",
+      "line": 15
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "Here we check to see if the UserId() (a built-in function to get the current user's Id) is present in the User Setup table.  They might not be!\r\n\r\n### Aside about If\r\nYou'll notice our if has two conditions - UserSetup.Get(...) (which returns a boolean - found or not found) and a comparison (is the Gift Base Code empty?` -- there's no NULL in Business Central).\r\n\r\nIf the first condition fails and we use an `and`, the second condition won't run.  Super helpful",
+      "line": 17
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "If we found a user setup for the logged in user _and_ they have a Gift Basket Code set, we'll set `Rec.\"Gift Basket Code CGB\"` to that user's setting.  Rec is the Customer that was just inserted.",
+      "line": 18
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "If the user doesn't have an override (or they have no User Setup), we'll default the `Gift Basket Code CGB` to the one selected in our Setup table.",
+      "line": 20
+    },
+    {
+      "file": "src/codeunit/GiftBasketCustEventCGB.Codeunit.al",
+      "description": "Whether we used the User Override or the Company default, we now need to _save_ that change we just made to Rec, so we fire Rec.Modify to let BC know to save this change.  This should almost be called with `true` to let Events watching for `Modify` related events on Customer know that a change happened.",
+      "line": 21
+    },
+    {
+      "file": "src/codeunit/UpdateExistingCustomersCGB.Codeunit.al",
+      "description": "And for our last stop on this tour, we have a Codeunit to hold the functionality asked for, to set all the initial Defaults for all customers in a Company when we run that action on our Gift Basket Setup page.",
+      "line": 5
+    },
+    {
+      "file": "src/codeunit/UpdateExistingCustomersCGB.Codeunit.al",
+      "description": "We call `SetFilter` on the Customer record with \"Which Field\" and \"What Filter\".  Here, we're filtering on the `Gift Basket Code CGB`.  Filtering on blank (`''`) is easy in the UI, but single quotes are how we mark strings in AL Code.  This means that we have to do \"double single quotes\" when we mean it literally, so this is how we arrive at the very strange `''''''` value.",
+      "line": 12
+    },
+    {
+      "file": "src/codeunit/UpdateExistingCustomersCGB.Codeunit.al",
+      "description": "Let's save the `.Count()` of Customer that have a Blank `Gift Basket Code CGB` to a variable before we change things.",
+      "line": 13
+    },
+    {
+      "file": "src/codeunit/UpdateExistingCustomersCGB.Codeunit.al",
+      "description": "Now we could loop through all the customers, set the values, and call modify for each one - but Business Central has a shortcut for that for us:  `ModifyAll`.\r\n\r\nHere we're setting:\r\n- Which field to modify\r\n- With what new value\r\n- if the Modify event should be called\r\n\r\nWe're saying, with this line of code: For all Customer records that meet the current filters, update the `Gift Basket Code CGB` field with the value from the Setup Default field and please fire the Modify events.\r\n",
+      "line": 14
+    },
+    {
+      "file": "src/codeunit/UpdateExistingCustomersCGB.Codeunit.al",
+      "description": "As a final step, we'll show the user a message, but only *if* the `GuiAllowed` is true.  This could be false if called by a scheduled task or API for example.",
+      "line": 15
+    },
+    {
+      "file": "src/codeunit/UpdateExistingCustomersCGB.Codeunit.al",
+      "description": "Message takes a string, and then an list of parameters to use in string substitution.   `%1` through `%9` are automatically replaced by the values in the list, based on their position.\r\n\r\nIn this example, our string is the `Label` variable called `CustomersUpdatedMsg`.  We then replace `%1` with the integer we saved ealier about the count of soon-to-be-affected customers.  We replace `%2` with the string field contents of the Default Gift Basket field.\r\n\r\nIt is important to use the Label datatype for `Message` (as well as `Error()`, `Confirm()`, and `StrMenu()`) as Labels will be available for Translation, but hard-coded strings (such as if you called `Message('hello world!')` like the example code Microsoft gives new extensions, *ahem*) cannot be.",
+      "line": 16
+    },
+    {
+      "title": "Wrapping Up",
+      "description": "## Wrapping Up\r\n\r\nThat concludes this tour through one extension.  There are many more topics and best practices, but hopefully this introduces many key concepts for a first time developer.\r\n\r\n\r\nIf you found this tour helpful, and would like to support Spare Brained Ideas to make more, as well as have access to any more that have been created, please consider signing up as a Bronze Supporter on our Patreon at:\r\n[https://www.patreon.com/sparebrained](https://www.patreon.com/sparebrained)"
+    }
+  ]
+}

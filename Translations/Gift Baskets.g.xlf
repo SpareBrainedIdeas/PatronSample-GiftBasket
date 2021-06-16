@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="en-US" original="Gift Baskets">
+    <body>
+      <group id="body">
+        <trans-unit id="Table 4151631100 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gift Basket</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Gift Basket CGB - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 4151631100 - Field 3004954119 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Gift Basket CGB - Field Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 4151631100 - Field 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Gift Basket CGB - Field Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 654816465 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gift Basket Setup</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Gift Basket Setup CGB - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 654816465 - Field 1472566166 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Company Default Gift Basket</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Gift Basket Setup CGB - Field Company Default Gift Basket - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 654816465 - Field 3670073434 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enable Gift Default</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Gift Basket Setup CGB - Field Enable Gift Default - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 654816465 - Field 1663593181 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Primary Key</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Gift Basket Setup CGB - Field Primary Key - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4098335869 - Method 4219085399 - NamedType 2076947581" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 Customers updated to the default (%2)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Update Existing Customers CGB - Method UpdateExistingCustomers - NamedType CustomersUpdatedMsg</note>
+        </trans-unit>
+        <trans-unit id="Page 4151631100 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gift Basket</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Basket CGB - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4151631100 - Control 3004954119 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Code field</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Basket CGB - Control Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4151631100 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Description field</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Basket CGB - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 654816465 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gift Basket Setup</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Basket Setup CGB - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 654816465 - Control 1472566166 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>If no User Setup "Gift Basket" is configured, use this as the fallback.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Basket Setup CGB - Control Company Default Gift Basket - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 654816465 - Control 3670073434 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Should new Customers receive a Gift Basket setting automatically?</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Basket Setup CGB - Control Enable Gift Default - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 654816465 - Action 4222548043 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Update all Customers with a blank Gift Basket Code to the Default.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Basket Setup CGB - Action UpdateToDefault - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 654816465 - Action 4222548043 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Update Customers</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Basket Setup CGB - Action UpdateToDefault - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2446407133 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gift Baskets</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Baskets CGB - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2446407133 - Control 3004954119 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Code field</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Baskets CGB - Control Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2446407133 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Description field</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gift Baskets CGB - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2749189802 - Control 651585367 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 523354100">
+          <source>Which Gift Basket this customer will get during the holidays.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Customer Card CGB - Control Gift Basket Code CGB - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2450804812 - Control 651585367 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2901867346">
+          <source>Which Gift Basket this customer will get during the holidays.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension Customer List CGB - Control Gift Basket Code CGB - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1635154236 - Control 651585367 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 337631938">
+          <source>When Customers are created by this User, which Gift Basket to use as the default.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension User Setup CGB - Control Gift Basket Code CGB - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2037945118 - Field 651585367 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1994964448">
+          <source>Gift Basket Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension Customer CGB - Field Gift Basket Code CGB - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1635154236 - Field 651585367 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 337631938">
+          <source>Gift Basket Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension User Setup CGB - Field Gift Basket Code CGB - Property Caption</note>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>
